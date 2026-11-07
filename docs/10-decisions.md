@@ -25,5 +25,12 @@ latence médiane mesurée > 400 ms après calibration, on étudie Fleet Telemetr
 **Décision** : mesurer le comportement réel du navigateur Tesla avant de coder l'estimation.
 **Pourquoi** : toute la qualité de synchro dépend de chiffres inconnus (fréquence GPS, retard interne).
 
+## ADR-008 — Accéléromètre (téléphone) comme « capteur de pédale »
+**Décision** : la réactivité vient d'un accéléromètre à 60 Hz (Tesla si exposé, sinon téléphone relié en
+WebRTC pair à pair), fusionné avec le GPS. **Pourquoi** : la pédale réelle n'est accessible que via le cloud
+Tesla (≥ 1 s, c'est le défaut des applis existantes) ; l'accélération mesurée est une image quasi instantanée
+de la pédale sur une voiture électrique. **Alternatives écartées** : Fleet API/Telemetry (latence, coût, serveur),
+dongle CAN (matériel, bricolage) — gardées en option lointaine.
+
 ## ADR-007 — Sources = prises brutes enregistrées en montée de régime + OBD
 **Décision** : je fabrique les boucles à partir de montées/descentes en régime (B1/B2 du doc 11) synchronisées avec un log OBD du régime. **Pourquoi** : enregistrer des paliers stables en charge exige un banc de puissance ; une montée lente sur rapport haut est faisable sur piste. **Conséquence** : l'outil `tools/build-sounds` doit inclure le découpage par régime (OBD ou suivi de la fréquence d'allumage).

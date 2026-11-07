@@ -66,6 +66,13 @@ Le site doit être en ligne en **HTTPS**. Le dépôt étant privé, on utilise *
 
 La page de diagnostic est à `https://xxxx.netlify.app/diag/`.
 
+### Accéléromètre / téléphone capteur (réactivité < 100 ms)
+1. Dans le cockpit : **📱 Téléphone capteur** → un QR code s'affiche.
+2. Scanne-le avec le téléphone → **CONNECTER** → autorise les capteurs (iPhone : « Mouvement et orientation »).
+3. **Fixe le téléphone** (support). Idéal : Tesla connectée au **partage de connexion** du téléphone.
+4. Roule : la Tesla apprend seule le sens de la route après quelques accélérations, ou appuie sur
+   **🎯 Calibrer** pendant une accélération franche.
+
 ### Utilisation en voiture
 1. Choisir un véhicule (le tap autorise l'audio).
 2. Choisir **GPS (route)** → **DÉMARRER** → autoriser la localisation la première fois.

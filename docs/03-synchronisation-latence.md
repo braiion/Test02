@@ -106,3 +106,50 @@ C'est pour ça que la Phase 0 est déterminante et que la Phase 2 (pédale réel
 
 Décision : **MVP = GPS + prédiction** ; on ne rajoute une option Phase 2 que si les mesures
 Phase 0/1 le justifient (voir ADR-003).
+
+## 7. Accéléromètre & « pédale » (ajout v0.2)
+
+### 7.1 Pourquoi la pédale des autres applis a ≥ 1 s de retard
+Le navigateur Tesla **n'a aucun accès** à la pédale ni au bus CAN. Les applis qui affichent la pédale
+la récupèrent via le **cloud Tesla** (Fleet API / Fleet Telemetry, champ `PedalPosition`) :
+```
+voiture ──4G──► serveurs Tesla ──► serveur de l'appli ──► navigateur de la voiture
+ (envoi périodique, ≥ 0,5–1 s)        (traitement)        (WebSocket / polling)
+= 0,8 à 2 s de retard, structurel
+```
+Ce n'est donc pas la « stack » du site ni le navigateur : c'est le **chemin des données**. Aucune
+optimisation de code ne peut descendre sous ce délai par ce chemin.
+
+### 7.2 Notre réponse : mesurer l'effet de la pédale, pas la pédale
+Sur une Tesla, le couple arrive < 100 ms après l'appui → **l'accélération longitudinale est une image
+quasi instantanée de la pédale** (et du freinage / de la régénération). Un accéléromètre la mesure à
+60–100 Hz avec quelques ms de retard.
+
+| Source accéléro | Disponibilité | Latence | Statut |
+|---|---|---|---|
+| Écran Tesla (`DeviceMotionEvent`) | Peu probable (testé par `diag/`) | ~20 ms | Utilisée **automatiquement** si présente |
+| **Téléphone fixé dans la voiture → Tesla** (WebRTC pair à pair) | Toujours | ~20–60 ms via partage de connexion, ~80–200 ms via 4G des deux côtés | **Implémentée** (page `capteur.html`, QR code) |
+| Téléphone seul (site ouvert sur le téléphone, son en Bluetooth vers la voiture) | Toujours | capteur ~20 ms + Bluetooth ~150–250 ms | Possible tel quel (même site), à tester |
+
+### 7.3 Chaîne de traitement
+1. **Orientation inconnue** du téléphone : gravité estimée (passe-bas 1,5 s) → plan horizontal → projection.
+2. **Axe avant** : appris automatiquement en corrélant l'accélération horizontale avec l'accélération GPS
+   (quelques accélérations/décélérations suffisent), ou instantanément avec **Calibrer** pendant une accélération franche.
+3. **Lissage 40 ms** (filtre les vibrations, garde la réactivité).
+4. **Fusion** (filtre complémentaire, `src/estimation/fusion.ts`) : on intègre l'accélération à 60 Hz ;
+   chaque point GPS recale la vitesse (en tenant compte de son retard ~250 ms) et estime le **biais**
+   de l'accéléromètre (téléphone incliné, pente) ; à l'arrêt, le biais est remis à zéro.
+5. La **charge moteur** (en charge / hors charge / pétarades) vient directement de l'accélération mesurée
+   → réaction au coup de pédale en < 100 ms ; le **régime** vient de la vitesse fusionnée.
+6. Si l'accéléromètre se tait > 0,5 s → retour automatique au mode GPS seul (avec anticipation).
+
+### 7.4 Mesures (simulation, tests automatisés)
+Scénario : coup d'accélérateur 4 m/s² à 30 km/h, GPS 1 Hz retardé de 300 ms.
+- **GPS seul** : détection de la charge **1000 ms** après l'appui.
+- **GPS + accéléromètre** : détection **dès la première mesure** (latence réelle attendue = latence capteur + liaison, soit ~20–60 ms en partage de connexion).
+- Vitesse fusionnée juste à < 3,6 km/h près malgré un biais de 0,4 m/s².
+
+### 7.5 Limites honnêtes
+- Ce n'est pas la position exacte de la pédale : pédale enfoncée à vitesse maxi limitée ou en côte raide = accélération faible → son moins « chargé ». En pratique, c'est ce que l'oreille attend.
+- Le téléphone doit être **fixe** (support) ; un téléphone qui glisse = faux coups d'accélérateur.
+- WebRTC dans le navigateur Tesla est à vérifier (`diag/` le teste). Le serveur public PeerJS sert uniquement à la mise en relation (aucune donnée sensible, aucun compte).

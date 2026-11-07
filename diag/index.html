@@ -71,6 +71,7 @@ function renderEnv(){
     row(0,"DeviceMotionEvent (API)", "DeviceMotionEvent" in window ? "présente":"absente") +
     row(0,"Événements accéléro reçus", S.motion.seen ? `${S.motion.count} (${f(S.motion.count/Math.max(1,(performance.now()-S.motion.t0)/1000),0)} Hz)` : "aucun", S.motion.seen?"ok":"warn") +
     row(0,"Accél. dernière (m/s²)", S.motion.lastAcc ?? "—") +
+    row(0,"WebRTC (téléphone capteur)", typeof RTCPeerConnection === "function" ? "oui" : "NON", typeof RTCPeerConnection === "function" ? "ok" : "bad") +
     row(0,"Chrome", chrome) +
     row(0,"Écran", `${screen.width}×${screen.height} @${devicePixelRatio}`) +
     row(0,"Fenêtre", `${innerWidth}×${innerHeight}`) +

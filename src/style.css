@@ -1,3 +1,4 @@
+[hidden] { display: none !important; }
 :root { --bg:#0b0d10; --card:#161a20; --line:#262c35; --fg:#eef1f5; --mut:#8a93a0; --acc:#ff5a1f; --ok:#3ecf6e; --warn:#f0a73a; --bad:#ef5350; }
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 html, body { margin: 0; background: var(--bg); color: var(--fg); font: 18px/1.4 system-ui, sans-serif; }
@@ -46,3 +47,13 @@ button { font: inherit; color: var(--fg); border: 0; border-radius: 14px; backgr
 input[type=range] { width: 100%; height: 44px; accent-color: var(--acc); }
 .debug { background: #000; color: #9fe39f; padding: 12px; border-radius: 10px; font-size: 14px; white-space: pre; overflow-x: auto; }
 @media (max-width: 700px) { .sliders { grid-template-columns: 1fr; } .demo { grid-template-columns: 1fr; } }
+
+.simmode { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 0; align-items: center; color: var(--mut); }
+.simmode span { margin-right: 12px; }
+.simmode .seg { min-height: 64px; flex: 1 1 140px; }
+.imu { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 16px; }
+.imu button { min-height: 72px; flex: 1 1 220px; }
+.phone { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; background: var(--card); border-radius: 14px; padding: 16px; margin-bottom: 16px; }
+.phone canvas { background: #fff; border-radius: 10px; padding: 8px; width: 220px; height: 220px; }
+.phone .code { font: 800 48px ui-monospace, monospace; letter-spacing: .25em; }
+.phone p { color: var(--mut); }

@@ -43,11 +43,32 @@
     <div id="demo" class="demo" hidden>
       <div id="pedal" class="pedal"><div id="pedalFill"></div><span>ACCÉLÉRATEUR<br/><small>appuie et glisse vers le haut</small></span></div>
       <button id="brake" class="brake">FREIN</button>
-      <label class="chk"><input type="checkbox" id="simGps" /> Simuler un GPS à 1 Hz (tester la compensation)</label>
+      <div class="simmode">
+        <span>Simulation des capteurs :</span>
+        <button class="seg" data-sim="perfect">Parfaite</button>
+        <button class="seg" data-sim="gps">GPS 1 Hz seul</button>
+        <button class="seg" data-sim="gps+imu">GPS + accéléromètre</button>
+      </div>
+    </div>
+    <div class="imu">
+      <button id="phoneBtn" class="ghost">📱 Téléphone capteur</button>
+      <button id="calibBtn" class="ghost">🎯 Calibrer (pendant une accélération)</button>
+      <span id="imuTxt" class="pill">Accéléromètre : —</span>
+    </div>
+    <div id="phonePanel" class="phone" hidden>
+      <canvas id="qr" width="260" height="260"></canvas>
+      <div>
+        <div class="code" id="phoneCode">-----</div>
+        <p>1. Scanne le QR code avec ton téléphone (ou ouvre <b id="phoneUrl"></b> et saisis le code).<br/>
+        2. Sur le téléphone : <b>CONNECTER</b> et autorise les capteurs.<br/>
+        3. Fixe le téléphone, laisse sa page ouverte.<br/>
+        <small>Latence minimale si la Tesla est connectée au partage de connexion du téléphone.</small></p>
+        <div>État : <b id="phoneSt">—</b></div>
+      </div>
     </div>
     <div class="sliders">
       <label>Volume <input type="range" id="vol" min="0" max="1" step="0.01" /></label>
-      <label>Anticipation <b id="laTxt"></b> <input type="range" id="la" min="0" max="1200" step="20" /></label>
+      <label>Anticipation GPS seul <b id="laTxt"></b> <input type="range" id="la" min="0" max="1200" step="20" /></label>
       <label class="chk"><input type="checkbox" id="dbg" /> Debug</label>
     </div>
     <pre id="debug" class="debug" hidden></pre>

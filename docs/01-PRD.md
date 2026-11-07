@@ -64,6 +64,10 @@ Un seul : moi, conducteur de Tesla, qui lance le site avant de partir et n'y tou
 | F14 | Mémorisation des réglages (localStorage) | Should |
 | F15 | Préchargement complet des sons avant démarrage, fonctionnement sans réseau ensuite | Should |
 | F16 | Limiteur de régime (rupteur) au rupteur max | Could |
+| F17 | **Accéléromètre** : accélération / décélération / « pédale » ressenties en temps réel (< 100 ms), fusionnées avec le GPS | **Must** |
+| F18 | **Téléphone capteur** : l'accéléromètre du téléphone envoyé en direct (WebRTC) à la page Tesla, appairage par QR code | **Must** |
+| F19 | Accéléromètre de l'appareil lui-même utilisé automatiquement s'il est exposé (écran Tesla ou téléphone) | Must |
+| F20 | Calibration de l'orientation : automatique (apprentissage via GPS) + bouton « Calibrer » | Must |
 
 ## 6. Exigences non fonctionnelles
 | ID | Exigence |

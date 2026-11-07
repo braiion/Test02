@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>EngineSync — Capteur</title>
+  <style>
+    :root { --bg:#0b0d10; --card:#161a20; --fg:#eef1f5; --mut:#8a93a0; --acc:#ff5a1f; --ok:#3ecf6e; --bad:#ef5350; }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 20px; background: var(--bg); color: var(--fg); font: 18px/1.4 system-ui, sans-serif; }
+    h1 { font-size: 24px; margin: 0 0 6px; } p { color: var(--mut); margin: 0 0 16px; }
+    input { width: 100%; font: 700 34px ui-monospace, monospace; letter-spacing: .3em; text-transform: uppercase; text-align: center;
+            padding: 14px; border-radius: 14px; border: 2px solid #2a313b; background: var(--card); color: var(--fg); }
+    button { width: 100%; min-height: 80px; margin-top: 14px; font: 800 24px system-ui; border: 0; border-radius: 14px; background: var(--acc); color: #fff; }
+    .card { background: var(--card); border-radius: 14px; padding: 14px 16px; margin-top: 14px; }
+    .big { font-size: 40px; font-weight: 800; font-variant-numeric: tabular-nums; }
+    .ok { color: var(--ok); } .bad { color: var(--bad); }
+    ol { color: var(--mut); padding-left: 20px; } li { margin-bottom: 6px; }
+  </style>
+</head>
+<body>
+  <h1>📱 Téléphone = capteur</h1>
+  <p>Ce téléphone envoie son accéléromètre à la Tesla, en direct.</p>
+  <input id="code" maxlength="5" placeholder="CODE" autocomplete="off" />
+  <button id="go">CONNECTER</button>
+  <div class="card"><div>État : <b id="st">non connecté</b></div><div>Envoi : <b id="hz">0</b> mesures/s</div></div>
+  <div class="card"><div>Accélération horizontale</div><div class="big" id="acc">—</div></div>
+  <div class="card">
+    <ol>
+      <li><b>Fixe le téléphone</b> (support, vide-poche bien calé) : il ne doit pas bouger pendant la conduite.</li>
+      <li>Idéal : connecte la Tesla au <b>partage de connexion</b> de ce téléphone (latence minimale).</li>
+      <li>Garde cette page <b>ouverte et l'écran allumé</b>.</li>
+      <li>La Tesla apprend seule le sens de la route après quelques accélérations, ou appuie sur « Calibrer » côté Tesla pendant une accélération franche.</li>
+    </ol>
+  </div>
+  <script type="module" src="/src/capteur.ts"></script>
+</body>
+</html>
