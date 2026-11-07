@@ -45,3 +45,4 @@ Critères de sortie MVP : PRD §7 atteints (latence médiane ≤ 300 ms, 0 coupu
 
 ## Journal d'avancement
 - 2026-11-07 — Véhicule de test : Model Y 2026 Juniper Grande Autonomie (MCU3). Page `diag/index.html` livrée (Phase 0, P0.1→P0.4).
+- 2026-11-07 — Véhicules MVP choisis (V8 US, V10 type Carrera GT, V12 type Aventador SVJ), sons = enregistrements perso → guide doc 11, profils `public/vehicles/*/vehicle.json` (valeurs provisoires).

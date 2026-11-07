@@ -1,5 +1,11 @@
 # 05 — Spécification des sons (ce que tu dois me fournir)
 
+> **Tu enregistres toi-même → suis le [guide d'enregistrement (doc 11)](11-guide-enregistrement.md)** et livre
+> les **prises brutes** (§9 du doc 11). Ce doc 05 décrit le format *final* des boucles ; c'est moi qui les
+> fabrique à partir de tes prises. Il reste utile si tu prépares toi-même des boucles.
+>
+> Véhicules MVP : `v8-us` (V8 américain), `v10-cgt` (V10 type Carrera GT), `v12-svj` (V12 type Aventador SVJ).
+
 > TL;DR : par véhicule, **des boucles WAV à régime constant**, en charge et hors charge,
 > tous les 500 à 1000 tr/min, + ralenti + démarrage/arrêt + pétarades. Je m'occupe de
 > l'encodage final et de la normalisation.

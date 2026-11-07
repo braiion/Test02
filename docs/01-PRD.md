@@ -100,6 +100,6 @@ ou télémétrie Tesla).
 1. ~~Modèle exact, année, ordinateur de bord~~ → **Répondu** : Tesla **Model Y 2026 « Juniper » Grande Autonomie**,
    ~350 ch, 0–100 km/h ≈ 5 s → ordinateur **MCU3 (AMD Ryzen)**, écran central 15,4″ + écran arrière.
    Reste à relever : **version du firmware** (Contrôles → Logiciel).
-2. Quels 2–3 véhicules veux-tu pour le MVP ? (proposition : V8 américain, V10/V12 supercar, 4-cyl/6-cyl turbo)
-3. Les sons : enregistrés par toi, achetés (banques de sons), ou extraits ? (impact légal, doc 09)
-4. Hébergement : OK pour GitHub Pages / Cloudflare Pages (gratuit) ?
+2. ~~Véhicules MVP~~ → **Répondu** : **V8 américain**, **V10 type Carrera GT**, **V12 type Aventador SVJ** (profils dans `public/vehicles/`).
+3. ~~Origine des sons~~ → **Répondu** : **mes propres enregistrements** → guide dédié : [doc 11](11-guide-enregistrement.md).
+4. Hébergement → **reporté** (Netlify Drop pour la page diag en attendant).

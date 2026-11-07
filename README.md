@@ -27,6 +27,7 @@ Les sites existants :
 | 08 | [Tests & validation](docs/08-tests-validation.md) | Protocole de test sur route, mesures de latence |
 | 09 | [Risques, sécurité & légal](docs/09-risques-legal.md) | Sécurité routière, limites Tesla, droits sur les sons |
 | 10 | [Décisions (ADR)](docs/10-decisions.md) | Journal des choix techniques |
+| 11 | [Guide d'enregistrement](docs/11-guide-enregistrement.md) | **Comment enregistrer tes voitures** : matériel, micros, séance, livraison |
 
 ## État
 - [x] Phase C — Conception (ce dossier)

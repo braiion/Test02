@@ -1,0 +1,18 @@
+{
+  "id": "v8-us",
+  "name": "V8 américain",
+  "engine": "V8 atmo ~5.0–6.2 L, vilebrequin cross-plane",
+  "_note": "Valeurs approximatives, à affiner à l'oreille et selon le modèle exact enregistré",
+  "cylinders": 8,
+  "idleRpm": 750,
+  "redlineRpm": 6500,
+  "limiterRpm": 6700,
+  "gears": [3.66, 2.43, 1.69, 1.32, 1.00, 0.65],
+  "finalDrive": 3.73,
+  "wheelCircumferenceM": 2.12,
+  "shiftUpRpm": { "low": 2200, "high": 6300 },
+  "shiftDownRpm": 1200,
+  "aMaxMs2": 5.0,
+  "inertia": { "tauUpMs": 140, "tauDownMs": 280 },
+  "samples": null
+}

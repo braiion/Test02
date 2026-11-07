@@ -15,7 +15,10 @@
   Les sons sources ne sont **pas** commités publiquement (dépôt public = redistribution) →
   dossier `sounds-src/` ignoré par git ; si le dépôt final est public, les sons encodés aussi
   seront à héberger dans un dépôt/stockage privé.
-- Noms/logos de marques automobiles : usage descriptif seulement (« V8 type muscle car »), pas de logos.
+- Sons = **tes propres enregistrements** → tu en détiens les droits. Obtenir l'accord du propriétaire du véhicule
+  et de l'organisateur de piste (un message écrit suffit).
+- Noms de modèles : usage descriptif en privé (« V10 type Carrera GT »), pas de logos.
+- Prises en roulant **uniquement sur circuit / route fermée** (pleine charge = vitesses élevées).
 
 ## 3. Risques techniques
 | Risque | Probabilité | Impact | Mitigation |
@@ -25,6 +28,7 @@
 | Navigateur bloqué en roulant sur certains firmwares | Faible | Bloquant | Vérifier H7 dès la Phase 0 |
 | Audio suspendu en arrière-plan (autre app plein écran) | Moyenne | Moyen | Tester ; garder le navigateur en demi-écran ; reprise auto `resume()` |
 | CPU insuffisant | Faible (MCU3 Ryzen) | Moyen | Fenêtre de sources actives réduite, UI minimale |
-| Sons de qualité insuffisante (pas de boucles stables) | Moyenne | Fort | Spec doc 05 ; plan B « sweep » |
+| Sons de qualité insuffisante (saturation, vent, pas de régime connu) | Moyenne | Fort | Guide doc 11 : 32 bits flottants, bonnettes, OBD, prise test au casque |
+| Accès limité aux voitures (une seule séance possible) | Élevée | Fort | Plan minimal doc 11 §10 (ralenti + montées + décélérations) |
 | Mise à jour Tesla qui change le navigateur | Faible | Moyen | Page diag réutilisable pour revalider |
 | Coût caché (API Tesla) | — | — | Hors MVP ; à chiffrer avant Phase 2 |

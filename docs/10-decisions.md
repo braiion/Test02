@@ -24,3 +24,6 @@ latence médiane mesurée > 400 ms après calibration, on étudie Fleet Telemetr
 ## ADR-006 — Phase 0 de diagnostic avant tout développement capteurs
 **Décision** : mesurer le comportement réel du navigateur Tesla avant de coder l'estimation.
 **Pourquoi** : toute la qualité de synchro dépend de chiffres inconnus (fréquence GPS, retard interne).
+
+## ADR-007 — Sources = prises brutes enregistrées en montée de régime + OBD
+**Décision** : je fabrique les boucles à partir de montées/descentes en régime (B1/B2 du doc 11) synchronisées avec un log OBD du régime. **Pourquoi** : enregistrer des paliers stables en charge exige un banc de puissance ; une montée lente sur rapport haut est faisable sur piste. **Conséquence** : l'outil `tools/build-sounds` doit inclure le découpage par régime (OBD ou suivi de la fréquence d'allumage).
