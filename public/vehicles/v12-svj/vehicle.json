@@ -18,11 +18,6 @@
   ],
   "finalDrive": 2.867,
   "wheelCircumferenceM": 2.233,
-  "shiftUpRpm": {
-    "low": 3000,
-    "high": 8400
-  },
-  "shiftDownRpm": 1600,
   "aMaxMs2": 5.0,
   "inertia": {
     "tauUpMs": 100,
@@ -41,5 +36,9 @@
     "topSpeedKmh": 350,
     "launchAccel": 11.0
   },
-  "_perfSource": "Lamborghini Aventador SVJ : 0–100 2,8 s, 350 km/h"
+  "_perfSource": "Lamborghini Aventador SVJ : 0–100 2,8 s, 350 km/h",
+  "shift": {
+    "wotRpm": 8500,
+    "note": "Boîte ISR : passage pied au plancher à la puissance max (8500), rupteur 8700"
+  }
 }

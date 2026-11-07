@@ -17,11 +17,6 @@
   ],
   "finalDrive": 3.73,
   "wheelCircumferenceM": 2.12,
-  "shiftUpRpm": {
-    "low": 2200,
-    "high": 6300
-  },
-  "shiftDownRpm": 1200,
   "aMaxMs2": 5.0,
   "inertia": {
     "tauUpMs": 140,
@@ -39,5 +34,9 @@
     "topSpeedKmh": 250,
     "launchAccel": 8.0
   },
-  "_perfSource": "Type Mustang GT / Camaro SS : 0–100 ≈ 4,5 s, 250 km/h (limitée)"
+  "_perfSource": "Type Mustang GT / Camaro SS : 0–100 ≈ 4,5 s, 250 km/h (limitée)",
+  "shift": {
+    "wotRpm": 7300,
+    "note": "Boîte manuelle : passage juste avant la zone rouge (7500)"
+  }
 }

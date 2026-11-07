@@ -138,3 +138,18 @@ au freinage, elle rétrograde dès que le régime après rétrogradage reste sou
 
 Les derniers rapports sont des surmultipliées (vitesse maxi atteinte avant le rupteur, limitée par l'aéro) : normal.
 Sources : km77.com, lambocars.com, motormatchup.com, Wikipedia (Porsche Carrera GT), thedrive.com, carthrottle.com.
+
+### 6.5 Points de passage réels par rapport (v0.3.2)
+Chaque véhicule déclare son passage pied au plancher réel (`shift.wotRpm`, avec option `perGear` pour un régime
+différent par rapport). Mode Sport = ce régime exact ; Normal = 96 % ; Confort = 76 %.
+Le régime après passage découle des vrais rapports (`régime × rapport suivant / rapport actuel`).
+
+| Véhicule | Passage plancher | Régime après passage (1→2, 2→3, 3→4…) |
+|---|---|---|
+| V8 type Mustang GT | 7300 (zone rouge 7500) | 4847 · 5077 · 5702 · 5530 · 4745 |
+| V10 type Carrera GT | 8300 (rupteur 8400) | 4850 · 6036 · 6530 · 6981 · 6917 |
+| V12 type SVJ | 8500 (puissance max, rupteur 8700) | 5301 · 6311 · 6847 · 6908 · 6936 · 7419 |
+
+Le tableau complet (vitesse de la vraie voiture et vitesse Tesla correspondante à chaque passage) est affiché
+dans l'appli, section « Ma Tesla & calage ». Avec le calage, une Model Y (201 km/h max) parcourt les rapports
+1 à 4 d'une SVJ, 1 à 4 d'une Carrera GT et 1 à 5 d'une Mustang.

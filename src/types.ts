@@ -10,8 +10,8 @@ export interface VehicleProfile {
   gears: number[];
   finalDrive: number;
   wheelCircumferenceM: number;
-  shiftUpRpm: { low: number; high: number };
-  shiftDownRpm: number;
+  /** Point de passage réel pied au plancher (tr/min) ; option : un régime par rapport (1→2, 2→3…). */
+  shift?: { wotRpm: number; perGear?: number[]; note?: string };
   aMaxMs2: number;
   inertia: { tauUpMs: number; tauDownMs: number };
   shiftStyle?: "soft" | "hard";

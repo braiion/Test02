@@ -47,6 +47,33 @@ function updatePerfInfo() {
       `${kmh(mapSpeed(h, t, 50 / 3.6))} / ${kmh(mapSpeed(h, t, 100 / 3.6))} / ${kmh(mapSpeed(h, t, 150 / 3.6))} km/h.`;
   }
   $("perfInfo").textContent = txt;
+  renderGearTable();
+}
+
+/** Tableau par rapport : passage pied au plancher (réel), régime après passage, vitesse vraie voiture, vitesse Tesla. */
+function renderGearTable() {
+  const el = $("gearTable");
+  if (!model || !profile) { el.innerHTML = ""; return; }
+  const p = profile, n = p.gears.length, kmh = (v: number) => Math.round(v * 3.6);
+  const vAt = (rpm: number, g: number) => (rpm / 60) * p.wheelCircumferenceM / (p.gears[g] * p.finalDrive);
+  const tesla = (v: number) => {
+    if (!model!.calage || !hostCurve || !model!.target) return kmh(v);
+    if (v >= model!.target.vmax * 0.99) return null;
+    const vh = hostCurve.speedAt(model!.target.timeTo(v));
+    return vh >= hostCurve.vmax * 0.985 ? null : kmh(vh);
+  };
+  let rows = "";
+  for (let g = 0; g < n; g++) {
+    const last = g === n - 1;
+    const r = last ? p.limiterRpm : model.wotShiftRpm(g);
+    const v = vAt(r, g);
+    const after = last ? "—" : Math.round(r * p.gears[g + 1] / p.gears[g]).toString();
+    const vt = tesla(Math.min(v, model.target ? model.target.vmax : v));
+    const vReal = model.target && v > model.target.vmax ? `${kmh(model.target.vmax)} (V max)` : `${kmh(v)}`;
+    rows += `<tr><td>${g + 1}${last ? "" : ` → ${g + 2}`}</td><td>${p.gears[g]}</td><td>${last ? `rupteur ${r}` : r}</td><td>${after}</td><td>${vReal}</td><td>${vt ?? "au-delà de ta V max"}</td></tr>`;
+  }
+  el.innerHTML = `<table><thead><tr><th>Rapport</th><th>Démult.</th><th>Passage plancher (tr/min)</th><th>Régime après</th><th>Vitesse vraie voiture (km/h)</th><th>Ta Tesla à (km/h)</th></tr></thead><tbody>${rows}</tbody></table>
+  <p>Pont ${p.finalDrive} · ${p.shift?.note ?? ""} · en mode Sport ; Normal passe à 96 %, Confort à 76 % de ce régime.</p>`;
 }
 
 // ---------------- Capteurs & estimation ----------------
@@ -196,7 +223,7 @@ applyDriveMode();
 // voiture hôte & calage
 const h0100 = $<HTMLInputElement>("h0100"), hVmax = $<HTMLInputElement>("hVmax"), calage = $<HTMLInputElement>("calage");
 calage.checked = settings.calage;
-calage.onchange = () => { settings.calage = calage.checked; if (model) model.calage = calage.checked; saveSettings(settings); };
+calage.onchange = () => { settings.calage = calage.checked; if (model) model.calage = calage.checked; saveSettings(settings); updatePerfInfo(); };
 const onHostInput = () => {
   const a = parseFloat(h0100.value), b = parseFloat(hVmax.value);
   if (a >= 2 && a <= 15) settings.host0100 = a;

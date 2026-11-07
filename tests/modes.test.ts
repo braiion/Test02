@@ -85,3 +85,20 @@ describe("Modes de conduite", () => {
     expect(pops).toBeLessThanOrEqual(1);
   });
 });
+
+describe("Passages de rapports réels (pied au plancher, mode Sport)", () => {
+  for (const id of ["v8-us", "v10-cgt", "v12-svj"]) {
+    it(`${id} : chaque rapport passe au régime réel`, () => {
+      const p = prof(id);
+      const m = make(id, "sport", false);
+      // vitesse augmentée régulièrement (sans calage) pour lire le régime au passage
+      let v = 0, g = m.gear; const at: number[] = [];
+      for (let i = 0; i < 60 * 60 && m.gear < p.gears.length - 1; i++) {
+        v += 3 * dt; const tgt = m.rpmForGear(v, m.gear);
+        const s = m.update(dt, { v, a: 7 }); if (s.gear > g) at.push(tgt); g = s.gear;
+      }
+      expect(at.length).toBe(p.gears.length - 1);
+      at.forEach((r, i) => expect(Math.abs(r - m.wotShiftRpm(i))).toBeLessThan(80));
+    });
+  }
+});

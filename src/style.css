@@ -68,3 +68,9 @@ input[type=range] { width: 100%; height: 44px; accent-color: var(--acc); }
 .hostgrid label { display: flex; flex-direction: column; color: var(--mut); gap: 6px; }
 .hostgrid input { font: 700 24px system-ui; width: 160px; padding: 10px; border-radius: 10px; border: 1px solid var(--line); background: #0b0d10; color: var(--fg); }
 .perfinfo { font-size: 15px; white-space: pre-line; }
+
+.geartable { overflow-x: auto; }
+.geartable table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; font-size: 16px; }
+.geartable th { text-align: left; color: var(--mut); font-weight: 600; padding: 6px 10px; border-bottom: 1px solid var(--line); }
+.geartable td { padding: 6px 10px; border-bottom: 1px solid var(--line); }
+.geartable p { color: var(--mut); font-size: 14px; }

@@ -55,6 +55,12 @@ export class VehicleModel {
     return (v / this.p.wheelCircumferenceM) * 60 * this.p.gears[g] * this.p.finalDrive;
   }
 
+  /** Régime de passage réel pied au plancher pour le rapport g (g → g+1). */
+  wotShiftRpm(g: number): number {
+    const s = this.p.shift;
+    return s?.perGear?.[g] ?? s?.wotRpm ?? this.p.redlineRpm * 0.97;
+  }
+
   /** Accélération max que la voiture réelle peut fournir à cette vitesse. */
   private hostAMax(v: number): number {
     return this.host ? Math.max(0.6, this.host.aMax(v)) : this.p.aMaxMs2;
@@ -99,7 +105,9 @@ export class VehicleModel {
 
     // ---- boîte de vitesses ----
     const n = p.gears.length;
-    const shiftUp = red * (m.upshiftLow + (m.upshiftHigh - m.upshiftLow) * Math.pow(clamp((loadT - 0.12) / 0.88, 0, 1), 1.3));
+    const wot = this.wotShiftRpm(this.gear);
+    const lowUp = red * m.upshiftLow, highUp = wot * m.upshiftHigh;
+    const shiftUp = lowUp + (highUp - lowUp) * Math.pow(clamp((loadT - 0.12) / 0.88, 0, 1), 1.3);
     const cur = this.rpmForGear(v, this.gear);
     const lower = this.gear > 0 ? this.rpmForGear(v, this.gear - 1) : Infinity;
     if (vReal < 0.5) this.gear = 0;

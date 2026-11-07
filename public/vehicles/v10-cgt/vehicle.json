@@ -17,11 +17,6 @@
   ],
   "finalDrive": 4.44,
   "wheelCircumferenceM": 2.228,
-  "shiftUpRpm": {
-    "low": 3000,
-    "high": 8200
-  },
-  "shiftDownRpm": 1600,
   "aMaxMs2": 5.0,
   "inertia": {
     "tauUpMs": 80,
@@ -39,5 +34,9 @@
     "topSpeedKmh": 330,
     "launchAccel": 9.0
   },
-  "_perfSource": "Porsche Carrera GT : 0–100 3,9 s, 330 km/h"
+  "_perfSource": "Porsche Carrera GT : 0–100 3,9 s, 330 km/h",
+  "shift": {
+    "wotRpm": 8300,
+    "note": "Boîte manuelle : passage juste avant le rupteur (puissance max 8000, rupteur 8400)"
+  }
 }
