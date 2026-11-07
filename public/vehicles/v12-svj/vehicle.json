@@ -2,22 +2,22 @@
   "id": "v12-svj",
   "name": "V12 type Aventador SVJ",
   "engine": "V12 atmo 6.5 L, moteur central, boîte robotisée 7 (ISR)",
-  "_note": "Rapports approximatifs, à affiner. Passages de rapports secs (coup de boîte) à simuler",
+  "_note": "Puissance max 8500 tr/min, régime max 8700 (km77, SVJ Roadster). Rapports ISR et pont 2,867 : lambocars.com (7e : 0,844 ; une autre source donne 0,89). Pneus AR 355/25 R21.",
   "cylinders": 12,
   "idleRpm": 1000,
   "redlineRpm": 8500,
   "limiterRpm": 8700,
   "gears": [
-    3.91,
-    2.44,
+    3.909,
+    2.438,
     1.81,
-    1.46,
-    1.19,
-    0.97,
-    0.89
+    1.458,
+    1.185,
+    0.967,
+    0.844
   ],
-  "finalDrive": 3.27,
-  "wheelCircumferenceM": 2.25,
+  "finalDrive": 2.867,
+  "wheelCircumferenceM": 2.233,
   "shiftUpRpm": {
     "low": 3000,
     "high": 8400

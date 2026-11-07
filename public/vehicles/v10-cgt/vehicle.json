@@ -2,21 +2,21 @@
   "id": "v10-cgt",
   "name": "V10 type Carrera GT",
   "engine": "V10 atmo 5.7 L, moteur central, volant moteur très léger",
-  "_note": "Rapports approximatifs (boîte manuelle 6), à affiner",
+  "_note": "Régime max 8400 tr/min (Wikipedia, Elferspot, Stuttcars). Rapports 6 vitesses et pont 4,44 : motormatchup.com (source unique, à confirmer). Pneus AR 335/30 R20.",
   "cylinders": 10,
   "idleRpm": 1000,
-  "redlineRpm": 8000,
+  "redlineRpm": 8400,
   "limiterRpm": 8400,
   "gears": [
-    3.15,
-    2.1,
-    1.58,
-    1.26,
-    1.04,
-    0.87
+    3.2,
+    1.87,
+    1.36,
+    1.07,
+    0.9,
+    0.75
   ],
-  "finalDrive": 3.44,
-  "wheelCircumferenceM": 2.08,
+  "finalDrive": 4.44,
+  "wheelCircumferenceM": 2.228,
   "shiftUpRpm": {
     "low": 3000,
     "high": 8200

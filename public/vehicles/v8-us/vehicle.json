@@ -1,12 +1,12 @@
 {
   "id": "v8-us",
-  "name": "V8 américain",
-  "engine": "V8 atmo ~5.0–6.2 L, vilebrequin cross-plane",
-  "_note": "Valeurs approximatives, à affiner à l'oreille et selon le modèle exact enregistré",
+  "name": "V8 américain (type Mustang GT)",
+  "engine": "V8 5.0 atmo « Coyote », vilebrequin cross-plane",
+  "_note": "Profil cohérent Mustang GT (2018+) : zone rouge 7500 tr/min (thedrive.com, carthrottle.com), boîte manuelle 6 (3,66…0,65), pont 3,73. Si ton V8 est un autre modèle (Camaro SS, Challenger…), on change régime et rapports.",
   "cylinders": 8,
-  "idleRpm": 750,
-  "redlineRpm": 6500,
-  "limiterRpm": 6700,
+  "idleRpm": 700,
+  "redlineRpm": 7500,
+  "limiterRpm": 7500,
   "gears": [
     3.66,
     2.43,

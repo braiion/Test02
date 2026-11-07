@@ -97,7 +97,7 @@ Pour chaque voiture (la Tesla **et** les véhicules simulés) :
 | Voiture | 0–100 | Vmax | a0 | Source |
 |---|---|---|---|---|
 | Tesla Model Y Grande Autonomie Juniper (hôte) | 4,8 s | 201 km/h | 7,5 m/s² | fiche constructeur (modifiable dans l'appli) |
-| V8 américain (type Mustang GT / Camaro SS) | 4,5 s | 250 km/h | 8 | ordre de grandeur |
+| V8 américain (type Mustang GT) | 4,5 s | 250 km/h | 8 | ordre de grandeur |
 | V10 type Carrera GT | 3,9 s | 330 km/h | 9 | données publiées |
 | V12 type Aventador SVJ | 2,8 s | 350 km/h | 11 | données publiées |
 
@@ -128,3 +128,13 @@ Désactivable (« Caler le véhicule simulé… »).
 
 Règle commune : **une boîte ne monte jamais de rapport en décélération** (sauf sur-régime) ;
 au freinage, elle rétrograde dès que le régime après rétrogradage reste sous le plafond du mode.
+
+### 6.4 Régimes et rapports (vérifiés sur sources, v0.3.1)
+| Véhicule | Ralenti | Zone rouge | Rupteur | Rapports / pont | Vitesse au rupteur par rapport (km/h) |
+|---|---|---|---|---|---|
+| V8 type Mustang GT (Coyote 5.0) | 700 | 7500 | 7500 | 3,66 · 2,43 · 1,69 · 1,32 · 1,00 · 0,65 / 3,73 | 70 · 105 · 151 · 194 · 256 · (393) |
+| V10 type Carrera GT | 1000 | 8400 | 8400 | 3,2 · 1,87 · 1,36 · 1,07 · 0,9 · 0,75 / 4,44 *(source unique)* | 79 · 135 · 186 · 236 · 281 · 337 |
+| V12 type Aventador SVJ | 1000 | 8500 (puissance max) | 8700 | 3,909 · 2,438 · 1,810 · 1,458 · 1,185 · 0,967 · 0,844 / 2,867 | 104 · 167 · 225 · 279 · 343 · (420) · (482) |
+
+Les derniers rapports sont des surmultipliées (vitesse maxi atteinte avant le rupteur, limitée par l'aéro) : normal.
+Sources : km77.com, lambocars.com, motormatchup.com, Wikipedia (Porsche Carrera GT), thedrive.com, carthrottle.com.
