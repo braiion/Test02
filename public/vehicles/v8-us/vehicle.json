@@ -7,12 +7,31 @@
   "idleRpm": 750,
   "redlineRpm": 6500,
   "limiterRpm": 6700,
-  "gears": [3.66, 2.43, 1.69, 1.32, 1.00, 0.65],
+  "gears": [
+    3.66,
+    2.43,
+    1.69,
+    1.32,
+    1.0,
+    0.65
+  ],
   "finalDrive": 3.73,
   "wheelCircumferenceM": 2.12,
-  "shiftUpRpm": { "low": 2200, "high": 6300 },
+  "shiftUpRpm": {
+    "low": 2200,
+    "high": 6300
+  },
   "shiftDownRpm": 1200,
   "aMaxMs2": 5.0,
-  "inertia": { "tauUpMs": 140, "tauDownMs": 280 },
+  "inertia": {
+    "tauUpMs": 140,
+    "tauDownMs": 280
+  },
+  "synth": {
+    "irregularity": 0.55,
+    "brightness": 1100,
+    "noise": 0.8,
+    "rough": 0.6
+  },
   "samples": null
 }

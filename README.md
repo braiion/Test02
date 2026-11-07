@@ -31,6 +31,34 @@ Les sites existants :
 
 ## État
 - [x] Phase C — Conception (ce dossier)
-- [ ] Phase 0 — Page de diagnostic à lancer dans la voiture (mesures réelles)
-- [ ] Phase 1 — MVP (2–3 véhicules)
+- [x] Phase 0 — Page de diagnostic (`diag/`) — **à lancer dans la voiture**
+- [ ] Phase 1 — MVP : moteur audio + modèle + GPS + mode Démo **faits** (sons de synthèse provisoires) ; reste : vrais enregistrements, outil de découpage, tests sur route
 - [ ] Phase 2 — Améliorations / télémétrie Tesla (optionnel)
+
+## Lancer l'application
+
+### Sur ordinateur (pour tester)
+```bash
+npm install
+npm run dev        # puis ouvrir l'adresse affichée
+npm test           # tests de la logique
+```
+Mode **Démo** : flèche ↑ = accélérer (Maj+↑ = mi-gaz), espace = freiner.
+
+### Dans la Tesla
+Le site doit être en ligne en **HTTPS**. Le dépôt étant privé, on utilise **Netlify** (gratuit) :
+1. Sur netlify.com → *Sign up* avec ton compte GitHub.
+2. *Add new site* → *Import an existing project* → *GitHub* → autoriser l'accès au dépôt `braiion/Test02`.
+3. Branche à publier : `claude/jolly-allen-9xs1kb`. Les réglages de build sont lus automatiquement depuis `netlify.toml`
+   (commande `npm run build`, dossier `dist`). → *Deploy*.
+4. Netlify donne une adresse `https://xxxx.netlify.app` (renommable dans *Site configuration → Change site name*).
+5. Dans la Tesla : navigateur → cette adresse → **ajouter aux favoris**.
+6. Chaque nouvel envoi sur la branche met le site à jour automatiquement (≈ 1 min).
+
+La page de diagnostic est à `https://xxxx.netlify.app/diag/`.
+
+### Utilisation en voiture
+1. Choisir un véhicule (le tap autorise l'audio).
+2. Choisir **GPS (route)** → **DÉMARRER** → autoriser la localisation la première fois.
+3. Régler le volume (le volume de la voiture reste le maître) et l'**anticipation** si le son paraît en retard
+   (augmenter) ou en avance (diminuer).

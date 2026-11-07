@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>EngineSync</title>
+</head>
+<body>
+  <section id="garage" class="screen">
+    <header><h1>EngineSync</h1><a class="link" href="diag/">🛠 Diagnostic</a></header>
+    <div id="cards" class="cards"></div>
+    <div id="loading" class="loading" hidden><div class="bar"><div id="loadBar"></div></div><span id="loadTxt">Chargement…</span></div>
+    <p class="note">Sons actuels = <b>sons de synthèse provisoires</b>, en attendant tes enregistrements.</p>
+  </section>
+
+  <section id="cockpit" class="screen" hidden>
+    <header>
+      <button id="back" class="ghost">← Garage</button>
+      <h2 id="vname"></h2>
+      <span id="gps" class="pill">—</span>
+    </header>
+    <div class="dash">
+      <svg id="tach" viewBox="0 0 300 215" aria-label="compte-tours">
+        <path id="tachBg" fill="none" stroke-width="16" stroke-linecap="round" />
+        <path id="tachRed" fill="none" stroke-width="16" />
+        <path id="tachVal" fill="none" stroke-width="16" stroke-linecap="round" />
+        <text id="rpmTxt" x="150" y="130" text-anchor="middle">0</text>
+        <text x="150" y="155" text-anchor="middle" class="unit">tr/min</text>
+      </svg>
+      <div class="side">
+        <div class="gear" id="gear">N</div>
+        <div class="speed"><span id="spd">0</span> km/h</div>
+      </div>
+    </div>
+    <div class="controls">
+      <button id="startBtn" class="start">▶ DÉMARRER</button>
+      <div class="mode">
+        <button id="modeGps" class="seg">GPS (route)</button>
+        <button id="modeDemo" class="seg">Démo</button>
+      </div>
+    </div>
+    <div id="demo" class="demo" hidden>
+      <div id="pedal" class="pedal"><div id="pedalFill"></div><span>ACCÉLÉRATEUR<br/><small>appuie et glisse vers le haut</small></span></div>
+      <button id="brake" class="brake">FREIN</button>
+      <label class="chk"><input type="checkbox" id="simGps" /> Simuler un GPS à 1 Hz (tester la compensation)</label>
+    </div>
+    <div class="sliders">
+      <label>Volume <input type="range" id="vol" min="0" max="1" step="0.01" /></label>
+      <label>Anticipation <b id="laTxt"></b> <input type="range" id="la" min="0" max="1200" step="20" /></label>
+      <label class="chk"><input type="checkbox" id="dbg" /> Debug</label>
+    </div>
+    <pre id="debug" class="debug" hidden></pre>
+  </section>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+:root { --bg:#0b0d10; --card:#161a20; --line:#262c35; --fg:#eef1f5; --mut:#8a93a0; --acc:#ff5a1f; --ok:#3ecf6e; --warn:#f0a73a; --bad:#ef5350; }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; background: var(--bg); color: var(--fg); font: 18px/1.4 system-ui, sans-serif; }
+body { padding: 16px; user-select: none; overflow-x: hidden; }
+header { display: flex; align-items: center; gap: 16px; justify-content: space-between; margin-bottom: 16px; }
+h1 { margin: 0; font-size: 30px; } h2 { margin: 0; font-size: 24px; }
+.link { color: var(--mut); font-size: 18px; }
+button { font: inherit; color: var(--fg); border: 0; border-radius: 14px; background: var(--card); min-height: 64px; padding: 0 20px; cursor: pointer; }
+.ghost { background: transparent; border: 1px solid var(--line); }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.card { min-height: 170px; text-align: left; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; border: 2px solid var(--line); }
+.card b { font-size: 26px; } .card span { color: var(--mut); font-size: 16px; }
+.card:active { border-color: var(--acc); }
+.loading { margin-top: 20px; } .bar { height: 10px; background: var(--card); border-radius: 5px; overflow: hidden; margin-bottom: 8px; }
+#loadBar { height: 100%; width: 0; background: var(--acc); }
+.note { color: var(--mut); font-size: 15px; margin-top: 24px; }
+.pill { padding: 6px 14px; border-radius: 99px; background: var(--card); font-size: 16px; }
+.pill.ok { color: var(--ok); } .pill.warn { color: var(--warn); } .pill.bad { color: var(--bad); }
+.dash { display: flex; align-items: center; justify-content: center; gap: 24px; flex-wrap: wrap; }
+#tach { width: min(440px, 100%); }
+#tachBg { stroke: var(--card); } #tachRed { stroke: #5a1d1d; } #tachVal { stroke: var(--acc); }
+#rpmTxt { font-size: 52px; font-weight: 700; fill: var(--fg); font-variant-numeric: tabular-nums; }
+.unit { fill: var(--mut); font-size: 16px; }
+.side { text-align: center; }
+.gear { font-size: 96px; font-weight: 800; line-height: 1; }
+.speed { font-size: 30px; color: var(--mut); font-variant-numeric: tabular-nums; }
+.speed span { color: var(--fg); font-weight: 700; }
+.controls { display: flex; gap: 16px; flex-wrap: wrap; margin: 16px 0; }
+.start { flex: 1 1 260px; min-height: 96px; font-size: 30px; font-weight: 800; background: var(--acc); }
+.start.on { background: #3a1408; color: #ffb59a; }
+.mode { display: flex; gap: 0; flex: 1 1 260px; }
+.seg { flex: 1; border-radius: 0; min-height: 96px; border: 1px solid var(--line); }
+.seg:first-child { border-radius: 14px 0 0 14px; } .seg:last-child { border-radius: 0 14px 14px 0; }
+.seg.sel { background: #2a3140; font-weight: 700; }
+.demo { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 16px; }
+.pedal { position: relative; height: 220px; background: var(--card); border-radius: 14px; overflow: hidden; touch-action: none; display: flex; align-items: center; justify-content: center; text-align: center; font-weight: 700; }
+.pedal span { position: relative; } .pedal small { font-weight: 400; color: var(--mut); }
+#pedalFill { position: absolute; left: 0; right: 0; bottom: 0; height: 0; background: linear-gradient(#ff5a1f, #8a2a08); }
+.brake { height: 220px; font-size: 26px; font-weight: 800; background: #2a1414; touch-action: none; }
+.brake.on { background: var(--bad); }
+.chk { grid-column: 1 / -1; display: flex; align-items: center; gap: 10px; color: var(--mut); }
+.chk input { width: 28px; height: 28px; }
+.sliders { display: grid; grid-template-columns: 1fr 1fr auto; gap: 24px; align-items: center; }
+.sliders label { display: flex; flex-direction: column; gap: 6px; color: var(--mut); }
+.sliders label.chk { flex-direction: row; }
+input[type=range] { width: 100%; height: 44px; accent-color: var(--acc); }
+.debug { background: #000; color: #9fe39f; padding: 12px; border-radius: 10px; font-size: 14px; white-space: pre; overflow-x: auto; }
+@media (max-width: 700px) { .sliders { grid-template-columns: 1fr; } .demo { grid-template-columns: 1fr; } }
