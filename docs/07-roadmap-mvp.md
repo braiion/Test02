@@ -42,3 +42,6 @@ Critères de sortie MVP : PRD §7 atteints (latence médiane ≤ 300 ms, 0 coupu
 1. Tu réponds aux questions PRD §9 + tu m'envoies les sons du **premier** véhicule.
 2. Je fais la Phase 0 (page diag) → tu la lances en roulant, tu m'envoies les mesures.
 3. En parallèle, je construis 1.1 → 1.4 avec le mode Démo.
+
+## Journal d'avancement
+- 2026-11-07 — Véhicule de test : Model Y 2026 Juniper Grande Autonomie (MCU3). Page `diag/index.html` livrée (Phase 0, P0.1→P0.4).

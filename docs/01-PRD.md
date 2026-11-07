@@ -73,7 +73,7 @@ Un seul : moi, conducteur de Tesla, qui lance le site avant de partir et n'y tou
 | NF3 | Chargement initial < 10 s en 4G (poids total des sons d'un véhicule ≤ 10 Mo) |
 | NF4 | Interface utilisable sans regarder (gros boutons ≥ 80 px, contrastés) |
 | NF5 | Site statique HTTPS (obligatoire pour la géolocalisation) |
-| NF6 | Compatible navigateur Tesla (Chromium) MCU2 et MCU3 ; fluide sur MCU2 (CPU plus faible) |
+| NF6 | Cible : navigateur Tesla (Chromium) **MCU3** du Model Y Juniper. MCU2 non visé (pas de véhicule de test) |
 | NF7 | Usage CPU raisonnable : pas de traitement audio lourd côté JS, tout dans le graphe Web Audio |
 
 ## 7. Métriques de succès
@@ -97,7 +97,9 @@ Si H2/H3 échouent → plan B décrit dans le doc 03 (dérivation de la vitesse 
 ou télémétrie Tesla).
 
 ## 9. Questions ouvertes (à me répondre)
-1. Modèle exact, année, et **ordinateur de bord** (MCU2 Intel ou MCU3 AMD Ryzen) ? Version firmware ?
+1. ~~Modèle exact, année, ordinateur de bord~~ → **Répondu** : Tesla **Model Y 2026 « Juniper » Grande Autonomie**,
+   ~350 ch, 0–100 km/h ≈ 5 s → ordinateur **MCU3 (AMD Ryzen)**, écran central 15,4″ + écran arrière.
+   Reste à relever : **version du firmware** (Contrôles → Logiciel).
 2. Quels 2–3 véhicules veux-tu pour le MVP ? (proposition : V8 américain, V10/V12 supercar, 4-cyl/6-cyl turbo)
 3. Les sons : enregistrés par toi, achetés (banques de sons), ou extraits ? (impact légal, doc 09)
 4. Hébergement : OK pour GitHub Pages / Cloudflare Pages (gratuit) ?

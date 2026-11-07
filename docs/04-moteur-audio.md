@@ -56,6 +56,13 @@ rpm_cible   = clamp(rpm_cible, idleRpm, limiterRpm)
 `a_max` dépend du véhicule (ex. 4 m/s²) : sur une Tesla qui accélère plus fort que le véhicule
 simulé, on sature à 1 (pleine charge) — c'est voulu.
 
+**Calibrage pour le Model Y Juniper Grande Autonomie** (0–100 ≈ 5 s) : accélération moyenne
+≈ 5,5 m/s², pic ≈ 7 m/s² au démarrage, régénération max ≈ −2 à −3 m/s² en lâcher de pédale.
+→ `a_max` par défaut = **5 m/s²** (pleine charge atteinte un peu avant le plancher réel),
+seuil hors charge −0,3 m/s² (la régénération déclenche donc bien le frein moteur + pétarades).
+Un 0–100 en 5 s couvre ~3 rapports d'un V8 : la boîte virtuelle doit pouvoir monter vite
+(temporisation anti-pompage 600 ms ⇒ OK).
+
 ### 3.5 Événements
 | Événement | Déclencheur | Son |
 |---|---|---|

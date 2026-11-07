@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>EngineSync — Diagnostic</title>
+<style>
+  :root { --bg:#0d0f12; --card:#171a20; --fg:#e8eaed; --mut:#8a919c; --ok:#3ecf6e; --warn:#f0a73a; --bad:#ef5350; --acc:#4f8cff; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:18px/1.4 system-ui, sans-serif; padding:16px; }
+  h1 { font-size:26px; margin:0 0 12px; }
+  .btns { display:flex; flex-wrap:wrap; gap:12px; margin-bottom:16px; }
+  button { min-height:80px; min-width:200px; font-size:22px; font-weight:600; border:0; border-radius:14px;
+           background:var(--acc); color:#fff; padding:0 24px; }
+  button.sec { background:#2a2f38; }
+  button:disabled { opacity:.4; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); gap:12px; }
+  .card { background:var(--card); border-radius:14px; padding:14px 16px; }
+  .card h2 { font-size:15px; text-transform:uppercase; letter-spacing:.05em; color:var(--mut); margin:0 0 8px; }
+  .big { font-size:44px; font-weight:700; font-variant-numeric:tabular-nums; }
+  table { width:100%; border-collapse:collapse; font-variant-numeric:tabular-nums; }
+  td { padding:3px 0; } td:last-child { text-align:right; font-weight:600; }
+  .ok{color:var(--ok)} .warn{color:var(--warn)} .bad{color:var(--bad)}
+  #hist { display:flex; align-items:flex-end; gap:3px; height:90px; }
+  #hist div { flex:1; background:var(--acc); min-height:1px; border-radius:2px 2px 0 0; }
+  #histlbl { display:flex; justify-content:space-between; color:var(--mut); font-size:13px; }
+  #log { white-space:pre-wrap; font:13px/1.3 ui-monospace, monospace; max-height:200px; overflow:auto; color:var(--mut); }
+  textarea { width:100%; height:120px; background:#000; color:var(--fg); border:1px solid #333; border-radius:8px; font:12px monospace; }
+</style>
+</head>
+<body>
+<h1>EngineSync — Diagnostic navigateur Tesla</h1>
+<div class="btns">
+  <button id="bStart">▶ Démarrer les mesures</button>
+  <button id="bBeep" class="sec" disabled>🔊 Bip test</button>
+  <button id="bRec" class="sec" disabled>⏺ Enregistrer 2 min</button>
+  <button id="bExport" class="sec" disabled>⬇ Exporter</button>
+</div>
+
+<div class="grid">
+  <div class="card"><h2>Vitesse GPS (coords.speed)</h2><div class="big" id="vSpeed">—</div><div id="vSpeedSrc" class="mut"></div></div>
+  <div class="card"><h2>Fréquence GPS</h2><div class="big" id="vHz">—</div><div id="vAge"></div></div>
+  <div class="card"><h2>Synthèse hypothèses</h2><table id="tHyp"></table></div>
+  <div class="card"><h2>Intervalles entre points (ms)</h2><table id="tInt"></table></div>
+  <div class="card"><h2>Histogramme intervalles</h2><div id="hist"></div><div id="histlbl"><span>0</span><span>500</span><span>1000</span><span>1500</span><span>≥2000 ms</span></div></div>
+  <div class="card"><h2>Audio</h2><table id="tAudio"></table></div>
+  <div class="card"><h2>Capteurs / navigateur</h2><table id="tEnv"></table></div>
+  <div class="card"><h2>Enregistrement</h2><div id="vRec">Inactif</div><textarea id="out" readonly placeholder="Le JSON exporté apparaît ici (copiable)"></textarea></div>
+  <div class="card" style="grid-column:1/-1"><h2>Journal</h2><div id="log"></div></div>
+</div>
+
+<script>
+"use strict";
+const $ = id => document.getElementById(id);
+const S = { pts: [], intervals: [], lastTs: null, speedNull: 0, speedOk: 0, dupes: 0,
+            motion: { seen:false, count:0, t0:0, lastAcc:null }, rec: null, ctx: null, watchId: null };
+
+function log(m){ const l=$("log"); l.textContent = new Date().toLocaleTimeString()+"  "+m+"\n"+l.textContent; }
+function row(t,k,v,cls=""){ return `<tr><td>${k}</td><td class="${cls}">${v}</td></tr>`; }
+function pct(a,p){ if(!a.length) return NaN; const s=[...a].sort((x,y)=>x-y); return s[Math.min(s.length-1,Math.floor(p*s.length))]; }
+function f(n,d=0){ return Number.isFinite(n) ? n.toFixed(d) : "—"; }
+
+// ---------- Environnement ----------
+function renderEnv(){
+  const ua = navigator.userAgent;
+  const chrome = (ua.match(/Chrome\/([\d.]+)/)||[])[1] || "?";
+  $("tEnv").innerHTML =
+    row(0,"Geolocation API", "geolocation" in navigator ? "oui":"non", "geolocation" in navigator ? "ok":"bad") +
+    row(0,"HTTPS (contexte sécurisé)", isSecureContext ? "oui":"NON", isSecureContext?"ok":"bad") +
+    row(0,"DeviceMotionEvent (API)", "DeviceMotionEvent" in window ? "présente":"absente") +
+    row(0,"Événements accéléro reçus", S.motion.seen ? `${S.motion.count} (${f(S.motion.count/Math.max(1,(performance.now()-S.motion.t0)/1000),0)} Hz)` : "aucun", S.motion.seen?"ok":"warn") +
+    row(0,"Accél. dernière (m/s²)", S.motion.lastAcc ?? "—") +
+    row(0,"Chrome", chrome) +
+    row(0,"Écran", `${screen.width}×${screen.height} @${devicePixelRatio}`) +
+    row(0,"Fenêtre", `${innerWidth}×${innerHeight}`) +
+    `<tr><td colspan="2" style="font-size:12px;color:var(--mut);word-break:break-all">${ua}</td></tr>`;
+}
+
+// ---------- Audio ----------
+function renderAudio(){
+  const c = S.ctx;
+  $("tAudio").innerHTML = c ?
+    row(0,"État", c.state, c.state==="running"?"ok":"warn") +
+    row(0,"Fréquence", c.sampleRate+" Hz") +
+    row(0,"baseLatency", f((c.baseLatency||NaN)*1000,1)+" ms") +
+    row(0,"outputLatency", f((c.outputLatency||NaN)*1000,1)+" ms",
+        (c.outputLatency||0) < .1 ? "ok":"warn")
+    : row(0,"État","non démarré");
+}
+function beep(){
+  const c=S.ctx; if(!c) return;
+  const o=c.createOscillator(), g=c.createGain(); o.frequency.value=440;
+  g.gain.setValueAtTime(0,c.currentTime); g.gain.linearRampToValueAtTime(.3,c.currentTime+.01);
+  g.gain.setTargetAtTime(0,c.currentTime+.25,.03);
+  o.connect(g).connect(c.destination); o.start(); o.stop(c.currentTime+.5);
+  if(S.rec) S.rec.events.push({ t: performance.now(), type:"beep" });
+  log("Bip joué");
+}
+
+// ---------- GPS ----------
+function onPos(p){
+  const now = performance.now(), c = p.coords, ts = p.timestamp;
+  if (S.lastTs !== null && ts === S.lastTs) { S.dupes++; return; }
+  if (S.lastTs !== null) S.intervals.push(ts - S.lastTs);
+  if (S.intervals.length > 600) S.intervals.shift();
+  S.lastTs = ts; S.lastRecv = now;
+  if (c.speed === null || c.speed === undefined || Number.isNaN(c.speed)) S.speedNull++; else S.speedOk++;
+
+  // vitesse dérivée des positions (comparaison)
+  let vDer = null; const prev = S.pts[S.pts.length-1];
+  if (prev) { const dt=(ts-prev.ts)/1000; if (dt>0) vDer = hav(prev.lat,prev.lon,c.latitude,c.longitude)/dt; }
+  const pt = { ts, recv: now, lat:c.latitude, lon:c.longitude, acc:c.accuracy, speed:c.speed, heading:c.heading, alt:c.altitude, vDer };
+  S.pts.push(pt); if (S.pts.length>600) S.pts.shift();
+  if (S.rec) S.rec.points.push(pt);
+
+  $("vSpeed").textContent = c.speed!=null ? f(c.speed*3.6,1)+" km/h" : "null";
+  $("vSpeedSrc").textContent = `dérivée positions : ${vDer!=null?f(vDer*3.6,1)+" km/h":"—"} · précision ${f(c.accuracy,0)} m`;
+  render();
+}
+function hav(a1,o1,a2,o2){ const R=6371000, r=Math.PI/180, da=(a2-a1)*r, dO=(o2-o1)*r;
+  const x=Math.sin(da/2)**2+Math.cos(a1*r)*Math.cos(a2*r)*Math.sin(dO/2)**2; return 2*R*Math.asin(Math.sqrt(x)); }
+
+function render(){
+  const iv = S.intervals, mean = iv.length ? iv.reduce((a,b)=>a+b,0)/iv.length : NaN;
+  const hz = 1000/mean;
+  $("vHz").textContent = Number.isFinite(hz) ? f(hz,2)+" Hz" : "—";
+  $("vHz").className = "big " + (hz>=2?"ok":hz>=0.9?"warn":"bad");
+  $("tInt").innerHTML = row(0,"Points reçus", S.pts.length + (S.rec? " (rec)":"")) +
+    row(0,"Moyenne", f(mean)) + row(0,"Médiane", f(pct(iv,.5))) +
+    row(0,"Min", f(Math.min(...iv))) + row(0,"P95", f(pct(iv,.95))) + row(0,"Max", f(Math.max(...iv))) +
+    row(0,"Doublons ignorés", S.dupes);
+  // histogramme 0..2000 par 100 ms
+  const bins = new Array(21).fill(0); iv.forEach(v=>bins[Math.min(20,Math.floor(v/100))]++);
+  const mx = Math.max(1,...bins);
+  $("hist").innerHTML = bins.map(b=>`<div style="height:${b/mx*100}%"></div>`).join("");
+  // hypothèses
+  const total = S.speedOk + S.speedNull;
+  $("tHyp").innerHTML =
+    row(0,"H1 Géoloc dispo", S.pts.length? "OK" : "en attente", S.pts.length?"ok":"warn") +
+    row(0,"H2 coords.speed renseigné", total? `${f(S.speedOk/total*100)} %` : "—", total ? (S.speedOk/total>.9?"ok":"bad") : "") +
+    row(0,"H3 Fréquence ≥ 1 Hz", Number.isFinite(hz)? f(hz,2)+" Hz":"—", hz>=0.9?"ok":Number.isFinite(hz)?"bad":"") +
+    row(0,"H4 Accéléromètre", S.motion.seen?"OUI":"non", S.motion.seen?"ok":"warn") +
+    row(0,"H6 Latence audio < 100 ms", S.ctx? f((S.ctx.outputLatency||S.ctx.baseLatency||0)*1000)+" ms":"—");
+  renderAudio(); renderEnv();
+}
+setInterval(()=>{
+  if (S.lastRecv) { const age = performance.now()-S.lastRecv;
+    $("vAge").innerHTML = `dernier point il y a <b class="${age<1500?"ok":age<3000?"warn":"bad"}">${f(age)} ms</b>`; }
+  if (S.rec) { const left = 120 - (performance.now()-S.rec.t0)/1000;
+    $("vRec").textContent = left>0 ? `Enregistrement… ${f(left)} s restantes, ${S.rec.points.length} points` : "Terminé";
+    if (left<=0) stopRec(); }
+}, 250);
+
+// ---------- Accéléromètre ----------
+function onMotion(e){
+  const a0 = e.acceleration || e.accelerationIncludingGravity;
+  if (!a0 || a0.x === null || a0.x === undefined) return; // événements vides = pas de vrai capteur
+  if(!S.motion.seen){ S.motion.seen=true; S.motion.t0=performance.now(); log("DeviceMotion reçu !"); }
+  S.motion.count++;
+  const a = e.acceleration || e.accelerationIncludingGravity;
+  if (a) S.motion.lastAcc = [a.x,a.y,a.z].map(v=>f(v,2)).join(" / ");
+  if (S.rec && S.motion.count % 5 === 0) S.rec.motion.push({ t: performance.now(), x:a?.x, y:a?.y, z:a?.z });
+}
+
+// ---------- Enregistrement ----------
+function startRec(){ S.rec = { t0: performance.now(), startedAt: new Date().toISOString(), points: [], motion: [], events: [] }; log("Enregistrement démarré (2 min)"); }
+function stopRec(){
+  if(!S.rec) return; const r = S.rec; S.rec = null; S.lastRecording = r;
+  $("bExport").disabled = false; log(`Enregistrement terminé : ${r.points.length} points`); exportJSON();
+}
+function exportJSON(){
+  const data = { app:"EngineSync-diag", v:1, ua:navigator.userAgent,
+    audio: S.ctx ? { sampleRate:S.ctx.sampleRate, baseLatency:S.ctx.baseLatency, outputLatency:S.ctx.outputLatency } : null,
+    stats: { hzMean: 1000/(S.intervals.reduce((a,b)=>a+b,0)/S.intervals.length), speedOk:S.speedOk, speedNull:S.speedNull, dupes:S.dupes, motion:S.motion.seen },
+    recording: S.lastRecording || { points: S.pts } };
+  const txt = JSON.stringify(data);
+  $("out").value = txt;
+  try { const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([txt],{type:"application/json"}));
+        a.download=`enginesync-diag-${Date.now()}.json`; a.click(); } catch(e){ log("Téléchargement impossible, copie le texte"); }
+}
+
+// ---------- Démarrage ----------
+$("bStart").onclick = async () => {
+  $("bStart").disabled = true;
+  try { S.ctx = new (window.AudioContext||window.webkitAudioContext)({ latencyHint:"interactive" }); await S.ctx.resume(); log("AudioContext OK"); }
+  catch(e){ log("Audio KO : "+e.message); }
+  if ("geolocation" in navigator) {
+    S.watchId = navigator.geolocation.watchPosition(onPos, e => log("GPS erreur "+e.code+" : "+e.message),
+      { enableHighAccuracy:true, maximumAge:0, timeout:10000 });
+    log("watchPosition lancé");
+  } else log("Pas de geolocation");
+  try {
+    if (typeof DeviceMotionEvent !== "undefined" && typeof DeviceMotionEvent.requestPermission === "function")
+      await DeviceMotionEvent.requestPermission();
+  } catch(e){}
+  addEventListener("devicemotion", onMotion);
+  ["bBeep","bRec","bExport"].forEach(id=>$(id).disabled=false);
+  render();
+};
+$("bBeep").onclick = beep;
+$("bRec").onclick = startRec;
+$("bExport").onclick = exportJSON;
+renderEnv(); renderAudio();
+</script>
+</body>
+</html>

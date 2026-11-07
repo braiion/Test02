@@ -24,7 +24,7 @@
 | Position GPS du navigateur lissée/retardée par la voiture | Moyenne | Fort | Mesure du retard en Phase 0 ; compensation par `lookahead` |
 | Navigateur bloqué en roulant sur certains firmwares | Faible | Bloquant | Vérifier H7 dès la Phase 0 |
 | Audio suspendu en arrière-plan (autre app plein écran) | Moyenne | Moyen | Tester ; garder le navigateur en demi-écran ; reprise auto `resume()` |
-| CPU MCU2 insuffisant | Moyenne | Moyen | Fenêtre de sources actives réduite, UI minimale |
+| CPU insuffisant | Faible (MCU3 Ryzen) | Moyen | Fenêtre de sources actives réduite, UI minimale |
 | Sons de qualité insuffisante (pas de boucles stables) | Moyenne | Fort | Spec doc 05 ; plan B « sweep » |
 | Mise à jour Tesla qui change le navigateur | Faible | Moyen | Page diag réutilisable pour revalider |
 | Coût caché (API Tesla) | — | — | Hors MVP ; à chiffrer avant Phase 2 |
