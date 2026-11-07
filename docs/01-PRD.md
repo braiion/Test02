@@ -68,6 +68,10 @@ Un seul : moi, conducteur de Tesla, qui lance le site avant de partir et n'y tou
 | F18 | **Téléphone capteur** : l'accéléromètre du téléphone envoyé en direct (WebRTC) à la page Tesla, appairage par QR code | **Must** |
 | F19 | Accéléromètre de l'appareil lui-même utilisé automatiquement s'il est exposé (écran Tesla ou téléphone) | Must |
 | F20 | Calibration de l'orientation : automatique (apprentissage via GPS) + bouton « Calibrer » | Must |
+| F21 | **Pédale relative** : la charge = accélération mesurée / accélération max que la Tesla peut fournir à cette vitesse (pied au plancher reste « pleine charge » à haute vitesse) | **Must** |
+| F22 | **Calage des performances** : chaque véhicule a ses données réelles (0–100, Vmax, motricité) ; pied au plancher, le régime et les rapports suivent la progression de la vraie voiture, pas celle de la Tesla | **Must** |
+| F23 | **Modes Confort / Normal / Sport** : lois de passage, rétrogradages au freinage, coup de gaz au rétrogradage, sensibilité pédale, vivacité du compte-tours, pétarades | **Must** |
+| F24 | Données de la Tesla hôte modifiables (0–100, Vmax) | Should |
 
 ## 6. Exigences non fonctionnelles
 | ID | Exigence |

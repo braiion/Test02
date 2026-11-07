@@ -85,3 +85,46 @@ Un 0–100 en 5 s couvre ~3 rapports d'un V8 : la boîte virtuelle doit pouvoir 
 - régler les sons à la maison sur PC,
 - tester dans la voiture à l'arrêt,
 - démontrer le rendu sans rouler.
+
+## 6. Réalisme : calage sur les vraies performances (v0.3)
+
+### 6.1 Courbe de performance (`src/engine/performance.ts`)
+Pour chaque voiture (la Tesla **et** les véhicules simulés) :
+`a_max(v) = min(a0, k/v) − c·v² − r`, coupée à la vitesse maxi.
+- `a0` : motricité au départ, `k` : puissance massique (ajustée automatiquement pour retrouver le **0–100 publié**),
+  `c` : traînée aéro, `r` : frottements.
+
+| Voiture | 0–100 | Vmax | a0 | Source |
+|---|---|---|---|---|
+| Tesla Model Y Grande Autonomie Juniper (hôte) | 4,8 s | 201 km/h | 7,5 m/s² | fiche constructeur (modifiable dans l'appli) |
+| V8 américain (type Mustang GT / Camaro SS) | 4,5 s | 250 km/h | 8 | ordre de grandeur |
+| V10 type Carrera GT | 3,9 s | 330 km/h | 9 | données publiées |
+| V12 type Aventador SVJ | 2,8 s | 350 km/h | 11 | données publiées |
+
+### 6.2 Pédale relative
+La Tesla pousse 7,4 m/s² à 30 km/h mais 2 m/s² à 150 km/h. Avant, l'accélération absolue faisait croire
+à un « demi-gaz » à haute vitesse. Maintenant : `ratio = a_mesurée / a_max_Tesla(v)` → pied au plancher = 100 % partout.
+
+### 6.3 Calage du véhicule simulé
+À **temps de pied au plancher égal**, on place le véhicule simulé à la vitesse qu'aurait la vraie voiture :
+`v_simulée = vitesse_vraie_voiture( temps_Tesla(v_réelle) )`.
+Exemple : Model Y à 100 km/h (4,8 s) ↔ SVJ à 141 km/h → le régime et les rapports montent au rythme d'une SVJ.
+La fonction est monotone et sans état (pas de dérive). L'affichage montre toujours la vitesse **réelle**.
+Désactivable (« Caler le véhicule simulé… »).
+
+## 7. Modes de conduite (`src/engine/driveModes.ts`)
+| Paramètre | Confort | Normal | Sport |
+|---|---|---|---|
+| Passage montant (fraction zone rouge, charge faible → plancher) | 0,27 → 0,72 | 0,33 → 0,93 | 0,60 → 0,985 |
+| Rétrogradage au freinage : régime max après rétro | 0,42 | 0,60 | 0,80 |
+| Rétrogradage en roue libre | 0,17 | 0,20 | 0,38 |
+| Kick-down à partir de charge | 0,95 | 0,80 | 0,55 |
+| Courbe pédale (gamma) | 1,5 (douce) | 1,0 | 0,6 (nerveuse) |
+| Vivacité moteur / compte-tours (× inertie) | 1,6 (lent) | 1,0 | 0,65 (vif) |
+| Coupure au passage montant | 0,28 s | 0,16 s | 0,07 s |
+| Coup de gaz au rétrogradage | non | léger | franc + pétarade |
+| Pétarades | aucune | modérées | max |
+| Garde le rapport au lever de pied | non | non | oui |
+
+Règle commune : **une boîte ne monte jamais de rapport en décélération** (sauf sur-régime) ;
+au freinage, elle rétrograde dès que le régime après rétrogradage reste sous le plafond du mode.

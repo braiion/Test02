@@ -33,5 +33,11 @@
     "noise": 1.1,
     "rough": 0.3
   },
-  "samples": null
+  "samples": null,
+  "perf": {
+    "zeroTo100s": 3.9,
+    "topSpeedKmh": 330,
+    "launchAccel": 9.0
+  },
+  "_perfSource": "Porsche Carrera GT : 0–100 3,9 s, 330 km/h"
 }

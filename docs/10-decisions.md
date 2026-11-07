@@ -25,6 +25,13 @@ latence médiane mesurée > 400 ms après calibration, on étudie Fleet Telemetr
 **Décision** : mesurer le comportement réel du navigateur Tesla avant de coder l'estimation.
 **Pourquoi** : toute la qualité de synchro dépend de chiffres inconnus (fréquence GPS, retard interne).
 
+## ADR-009 — Pédale relative + calage sur les performances réelles + modes de conduite
+**Décision** : la charge moteur est l'accélération rapportée au maximum possible de la Tesla à cette vitesse ;
+le véhicule simulé est placé, à temps de plancher égal, à la vitesse de la vraie voiture ; trois modes de
+conduite paramètrent la boîte et la réactivité. **Pourquoi** : réalisme (défaut n°1 des sites existants avec la
+latence) ; une SVJ ne monte pas en régime au rythme d'une Model Y. **Conséquence** : chaque nouveau véhicule
+doit fournir `perf` (0–100, Vmax, motricité) dans son `vehicle.json`.
+
 ## ADR-008 — Accéléromètre (téléphone) comme « capteur de pédale »
 **Décision** : la réactivité vient d'un accéléromètre à 60 Hz (Tesla si exposé, sinon téléphone relié en
 WebRTC pair à pair), fusionné avec le GPS. **Pourquoi** : la pédale réelle n'est accessible que via le cloud

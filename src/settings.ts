@@ -1,7 +1,10 @@
-export interface Settings { volume: number; lookaheadMs: number; mode: "gps" | "demo"; debug: boolean; simMode: SimMode }
+import type { DriveModeId } from "./engine/driveModes";
+export interface Settings { volume: number; lookaheadMs: number; mode: "gps" | "demo"; debug: boolean; simMode: SimMode;
+  driveMode: DriveModeId; calage: boolean; host0100: number | null; hostVmax: number | null }
 export type SimMode = "perfect" | "gps" | "gps+imu";
 const KEY = "enginesync.settings.v1";
-const DEF: Settings = { volume: 0.8, lookaheadMs: 400, mode: "demo", debug: false, simMode: "perfect" };
+const DEF: Settings = { volume: 0.8, lookaheadMs: 400, mode: "demo", debug: false, simMode: "perfect",
+  driveMode: "normal", calage: true, host0100: null, hostVmax: null };
 export function loadSettings(): Settings {
   try { return { ...DEF, ...JSON.parse(localStorage.getItem(KEY) || "{}") }; } catch { return { ...DEF }; }
 }

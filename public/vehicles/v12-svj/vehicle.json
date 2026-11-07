@@ -35,5 +35,11 @@
     "noise": 1.3,
     "rough": 0.35
   },
-  "samples": null
+  "samples": null,
+  "perf": {
+    "zeroTo100s": 2.8,
+    "topSpeedKmh": 350,
+    "launchAccel": 11.0
+  },
+  "_perfSource": "Lamborghini Aventador SVJ : 0–100 2,8 s, 350 km/h"
 }

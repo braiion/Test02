@@ -15,6 +15,7 @@ export interface VehicleProfile {
   aMaxMs2: number;
   inertia: { tauUpMs: number; tauDownMs: number };
   shiftStyle?: "soft" | "hard";
+  perf?: { zeroTo100s: number; topSpeedKmh: number; launchAccel: number; drag?: number };
   synth?: SynthParams;
   samples: null | {
     onLoad: SampleRef[];

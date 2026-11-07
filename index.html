@@ -40,6 +40,11 @@
         <button id="modeDemo" class="seg">Démo</button>
       </div>
     </div>
+    <div class="drive">
+      <button class="seg" data-dm="confort">Confort</button>
+      <button class="seg" data-dm="normal">Normal</button>
+      <button class="seg" data-dm="sport">Sport</button>
+    </div>
     <div id="demo" class="demo" hidden>
       <div id="pedal" class="pedal"><div id="pedalFill"></div><span>ACCÉLÉRATEUR<br/><small>appuie et glisse vers le haut</small></span></div>
       <button id="brake" class="brake">FREIN</button>
@@ -71,6 +76,17 @@
       <label>Anticipation GPS seul <b id="laTxt"></b> <input type="range" id="la" min="0" max="1200" step="20" /></label>
       <label class="chk"><input type="checkbox" id="dbg" /> Debug</label>
     </div>
+    <details class="host">
+      <summary>🚗 Ma Tesla &amp; calage des performances</summary>
+      <p id="hostName"></p>
+      <div class="hostgrid">
+        <label>0–100 km/h (s) <input type="number" id="h0100" step="0.1" min="2" max="15" /></label>
+        <label>Vitesse max (km/h) <input type="number" id="hVmax" step="1" min="100" max="350" /></label>
+        <button id="hReset" class="ghost">Valeurs d'origine</button>
+      </div>
+      <label class="chk"><input type="checkbox" id="calage" /> Caler le véhicule simulé sur ses vraies performances (pied au plancher, le régime suit la vraie voiture, pas la Tesla)</label>
+      <p id="perfInfo" class="perfinfo"></p>
+    </details>
     <pre id="debug" class="debug" hidden></pre>
   </section>
   <script type="module" src="/src/main.ts"></script>

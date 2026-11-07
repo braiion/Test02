@@ -11,6 +11,8 @@ import { MotionProcessor, sampleFromArrays, type MotionSample, type Vec } from "
 import { LocalMotion } from "./sensors/localMotion";
 import { PhoneHost } from "./sensors/phoneLink";
 import { loadSettings, saveSettings, type SimMode } from "./settings";
+import { PerfCurve, mapSpeed, type PerfSpec } from "./engine/performance";
+import { DRIVE_MODES, type DriveModeId } from "./engine/driveModes";
 
 const VEHICLES = ["v8-us", "v10-cgt", "v12-svj"];
 const BASE = import.meta.env.BASE_URL;
@@ -21,6 +23,31 @@ let ctx: AudioContext | null = null;
 let audio: AudioEngine | null = null;
 let profile: VehicleProfile | null = null;
 let model: VehicleModel | null = null;
+
+// ---------------- Voiture réelle (hôte) ----------------
+interface HostProfile { id: string; name: string; perf: PerfSpec; regenMaxMs2: number }
+let hostProfile: HostProfile | null = null;
+let hostCurve: PerfCurve | null = null;
+function rebuildHost() {
+  if (!hostProfile) return;
+  const spec: PerfSpec = { ...hostProfile.perf,
+    zeroTo100s: settings.host0100 ?? hostProfile.perf.zeroTo100s, topSpeedKmh: settings.hostVmax ?? hostProfile.perf.topSpeedKmh };
+  hostCurve = new PerfCurve(spec);
+  sim.host = hostCurve; sim.regenMax = hostProfile.regenMaxMs2;
+  if (model) model.host = hostCurve;
+  updatePerfInfo();
+}
+function updatePerfInfo() {
+  if (!hostCurve) return;
+  const h = hostCurve, kmh = (v: number) => (v * 3.6).toFixed(0);
+  let txt = `Ta Tesla pied au plancher : ${h.aMax(30 / 3.6).toFixed(1)} m/s² à 30 km/h, ${h.aMax(100 / 3.6).toFixed(1)} à 100, ${h.aMax(150 / 3.6).toFixed(1)} à 150 km/h → la pédale est mesurée par rapport à ce maximum.`;
+  if (model?.target && profile) {
+    const t = model.target;
+    txt += `\n${profile.name} (${t.spec.zeroTo100s} s, ${t.spec.topSpeedKmh} km/h) : quand ta Tesla est à 50 / 100 / 150 km/h pied au plancher, la vraie voiture serait à ` +
+      `${kmh(mapSpeed(h, t, 50 / 3.6))} / ${kmh(mapSpeed(h, t, 100 / 3.6))} / ${kmh(mapSpeed(h, t, 150 / 3.6))} km/h.`;
+  }
+  $("perfInfo").textContent = txt;
+}
 
 // ---------------- Capteurs & estimation ----------------
 const est = new SpeedEstimator();      // GPS seul (sert aussi de référence pour l'apprentissage de l'axe)
@@ -74,7 +101,8 @@ async function openVehicle(p: VehicleProfile) {
     $("loadTxt").textContent = `Préparation des sons… ${Math.round(x * 100)} %`;
   });
   $("loading").hidden = true;
-  profile = p; model = new VehicleModel(p);
+  profile = p; model = new VehicleModel(p, { host: hostCurve ?? undefined, calage: settings.calage, mode: DRIVE_MODES[settings.driveMode] });
+  updatePerfInfo();
   audio.setVolume(settings.volume);
   $("vname").textContent = p.name;
   drawTachBase(p);
@@ -153,6 +181,37 @@ addEventListener("keydown", (e) => {
   if (e.key === " ") { sim.brake = true; e.preventDefault(); }
 });
 addEventListener("keyup", (e) => { if (e.key === "ArrowUp") sim.pedal = 0; if (e.key === " ") sim.brake = false; });
+
+// modes de conduite
+function applyDriveMode() {
+  document.querySelectorAll<HTMLButtonElement>("[data-dm]").forEach((b) => b.classList.toggle("sel", b.dataset.dm === settings.driveMode));
+  if (model) model.mode = DRIVE_MODES[settings.driveMode];
+  saveSettings(settings);
+}
+document.querySelectorAll<HTMLButtonElement>("[data-dm]").forEach((b) => {
+  b.onclick = () => { settings.driveMode = b.dataset.dm as DriveModeId; applyDriveMode(); };
+});
+applyDriveMode();
+
+// voiture hôte & calage
+const h0100 = $<HTMLInputElement>("h0100"), hVmax = $<HTMLInputElement>("hVmax"), calage = $<HTMLInputElement>("calage");
+calage.checked = settings.calage;
+calage.onchange = () => { settings.calage = calage.checked; if (model) model.calage = calage.checked; saveSettings(settings); };
+const onHostInput = () => {
+  const a = parseFloat(h0100.value), b = parseFloat(hVmax.value);
+  if (a >= 2 && a <= 15) settings.host0100 = a;
+  if (b >= 100 && b <= 350) settings.hostVmax = b;
+  saveSettings(settings); rebuildHost();
+};
+h0100.onchange = onHostInput; hVmax.onchange = onHostInput;
+$("hReset").onclick = () => { settings.host0100 = null; settings.hostVmax = null; saveSettings(settings); loadHost(); };
+async function loadHost() {
+  hostProfile = await (await fetch(`${BASE}hosts/model-y-lr-juniper.json`)).json();
+  $("hostName").textContent = hostProfile!.name;
+  h0100.value = String(settings.host0100 ?? hostProfile!.perf.zeroTo100s);
+  hVmax.value = String(settings.hostVmax ?? hostProfile!.perf.topSpeedKmh);
+  rebuildHost();
+}
 
 // réglages
 const vol = $<HTMLInputElement>("vol"), la = $<HTMLInputElement>("la"), dbg = $<HTMLInputElement>("dbg");
@@ -252,6 +311,7 @@ function frame() {
           `v réelle(sim) ${(sim.v * 3.6).toFixed(1)}   v utilisée ${(inp.v * 3.6).toFixed(1)} km/h   a utilisée ${inp.a.toFixed(2)}   a réelle(sim) ${sim.a.toFixed(2)} m/s²\n` +
           `GPS-est v ${(est.v * 3.6).toFixed(1)} a ${est.a.toFixed(2)} pts ${est.count} | fusion v ${(fusion.v * 3.6).toFixed(1)} a ${fusion.a.toFixed(2)} biais ${fusion.bias.toFixed(2)}\n` +
           `accéléro ${mp.count} éch. ${mp.hz.toFixed(0)} Hz  aLong ${mp.aLong.toFixed(2)}  calibré ${mp.calibrated ? "oui" : "non"} (${mp.learnWeight.toFixed(1)})\n` +
+          `mode ${settings.driveMode}  calage ${model.calage ? "oui" : "non"}  pédale estimée ${(model.ratio * 100).toFixed(0)} %  v simulée ${(model.vVirt * 3.6).toFixed(0)} km/h  a max Tesla ici ${hostCurve ? hostCurve.aMax(inp.v).toFixed(2) : "—"}\n` +
           `rpm ${s.rpm.toFixed(0)}  rapport ${s.gear + 1}  charge ${s.load.toFixed(2)}  rupteur ${s.limiter ? "OUI" : "-"}  passage ${s.shifting ? "OUI" : "-"}\n` +
           `GPS ${geo.hz.toFixed(2)} Hz  précision ${Number.isFinite(geo.accuracy) ? geo.accuracy.toFixed(0) : "—"} m  doppler ok/null ${geo.dopplerOk}/${geo.dopplerNull}   voix audio ${audio.activeVoices}`;
       }
@@ -264,4 +324,4 @@ setInterval(() => { if (document.hidden) frame(); }, 33);
 document.addEventListener("visibilitychange", () => { if (!document.hidden) ctx?.resume(); });
 
 applyMode();
-initGarage();
+loadHost().then(initGarage);

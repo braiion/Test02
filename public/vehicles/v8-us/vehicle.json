@@ -33,5 +33,11 @@
     "noise": 0.8,
     "rough": 0.6
   },
-  "samples": null
+  "samples": null,
+  "perf": {
+    "zeroTo100s": 4.5,
+    "topSpeedKmh": 250,
+    "launchAccel": 8.0
+  },
+  "_perfSource": "Type Mustang GT / Camaro SS : 0–100 ≈ 4,5 s, 250 km/h (limitée)"
 }

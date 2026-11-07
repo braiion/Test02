@@ -1,0 +1,7 @@
+{
+  "id": "model-y-lr-juniper",
+  "name": "Tesla Model Y Grande Autonomie (Juniper, 2026)",
+  "_note": "Données constructeur publiques. Modifiables dans l'appli si ta fiche diffère.",
+  "perf": { "zeroTo100s": 4.8, "topSpeedKmh": 201, "launchAccel": 7.5 },
+  "regenMaxMs2": 2.0
+}
