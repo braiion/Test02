@@ -45,7 +45,16 @@ npm test           # tests de la logique
 ```
 Mode **Démo** : flèche ↑ = accélérer (Maj+↑ = mi-gaz), espace = freiner.
 
-### Dans la Tesla
+### Dans la Tesla — option A : GitHub Pages (dépôt public)
+1. Dépôt GitHub → *Settings* → *General* → tout en bas *Danger Zone* → *Change visibility* → **Public**.
+2. *Settings* → *Pages* → *Build and deployment* → *Source* : **GitHub Actions**.
+3. Onglet *Actions* : le workflow « Déploiement GitHub Pages » se lance à chaque envoi (relance-le à la main via *Run workflow* la première fois).
+4. Adresse du site : **https://braiion.github.io/Test02/** — diagnostic : **https://braiion.github.io/Test02/diag/**
+
+Le dépôt ne contient **aucun secret** (pas de `.env`, pas de clé, pas de variable d'environnement) ; `.gitignore`
+bloque `.env`, clés, et les dossiers de sons bruts (`sounds-src/`, `enregistrements/`).
+
+### Dans la Tesla — option B : Netlify (dépôt privé)
 Le site doit être en ligne en **HTTPS**. Le dépôt étant privé, on utilise **Netlify** (gratuit) :
 1. Sur netlify.com → *Sign up* avec ton compte GitHub.
 2. *Add new site* → *Import an existing project* → *GitHub* → autoriser l'accès au dépôt `braiion/Test02`.

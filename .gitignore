@@ -2,3 +2,11 @@ node_modules/
 dist/
 sounds-src/
 enregistrements/
+
+# jamais de secrets dans le dépôt
+.env
+.env.*
+*.pem
+*.key
+*.png
+!public/**/*.png
